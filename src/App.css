@@ -32,10 +32,10 @@ body {
   
 }
 .App {
-  margin: auto;
+ 
   flex-direction: row;
   display: flex;
-  margin: auto;
+ 
   align-items: start;
  
  
@@ -65,9 +65,11 @@ body {
   background-color: var(--color-dark);
 }
 .sidebar {
+  position: relative;
   width: 300px;
 }
 .sidebar ul {
+  
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -154,16 +156,10 @@ form {
 .form-add-friend {
   animation: topAddFriendContainerMoveY 0.5s forwards, topAddFriendContainerFadeIn 1s forwards;
   grid-template-columns: 1fr 1.5fr;
-  margin-bottom: 1.6rem;
+  background-color: var(--color-light);
   padding: 1.2rem;
 }
-.form-split-bill {
-  
-  width: 350px;
-  animation: rightSiderBarCalcMoveX 0.5s forwards, rightSiderBarCalcFadeIn 1s forwards;
-  grid-template-columns: 1fr 12rem;
-  padding: 3.2rem 4rem;
-}
+
 
 label {
   font-weight: 500;
@@ -454,7 +450,7 @@ form h2 {
   padding-left: 5px;
 }
 .img_footer_container_logged {
-  background-color: #d1e6ec;
+  background-color: #e7f1f4;
   display: flex;
   height: 140vh;
   justify-content: center;
@@ -550,13 +546,13 @@ form h2 {
 }
 .logoutContainer {
   justify-content: flex-end;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: row;
- 
+ z-index: 99;
   margin: auto;
   padding-bottom: 20px;
-  width: 100%;
+  
 }
 .button-message {
   display: flex;
@@ -807,6 +803,9 @@ form h2 {
   color: var(--main-color);
 }
 @media only screen and (max-width: 1000px) {
+  .form-split-bill-container {
+    width: 332px;
+  }
   .wrapper {
     height: 100%;
     flex-direction: column;
@@ -832,9 +831,21 @@ form h2 {
     width: 50vw;
   }
 }
+.form-split-bill-container {
+ 
+ 
 
+}
+
+.form-split-bill {
+  width: 350px;
+  animation: rightSiderBarCalcMoveX 0.5s forwards, rightSiderBarCalcFadeIn 1s forwards;
+  grid-template-columns: 1fr 12rem;
+  padding: 3.2rem 4rem;
+  position: absolute;
+}
 #btn-message {
-  background-color: #d1e6ec;
+  background-color: #88c3dc;
   --text-color: #000;
   --bg-color-sup: var(--color-medium);
   /* --bg-color: #f4f4f4; */
@@ -860,12 +871,12 @@ form h2 {
 
 
 .button-friend-container {
- 
+  
   display: flex;
   flex-direction: column;
   z-index: 999999;
   width:auto;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
 }

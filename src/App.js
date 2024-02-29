@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 import $ from 'jquery';
-
+import ModalWindow from "./components/modalWindow/modalWindow";
 
 
 function AddFriendContainer({children, openTabHandler, openTab}){
@@ -164,7 +164,7 @@ function RegisterForm({onSetRegForm, onChangeImage}){
 
 
 function LogginForm({onChangeImage, onSetRegForm, onLoggin, onAddIiemsData,  onLoader, onLoggedUserDetails, setUserEmail,setuserPassword, userPassword, userEmail }){
-
+  
   function regHandler() {
     onSetRegForm(true);
     onChangeImage("img/undraw_undraw_notebook_ask4_w99c.svg")
@@ -275,13 +275,11 @@ function App() {
   function openTabHandler(){
     setOpenTab(!openTab);
   }
-  
-
-
-
+ 
+ 
  
   return (<>
-  
+     {/* <ModalWindow/> */}
     {loggedUser &&<AddFriendContainer setOpenTab={setOpenTab}openTabHandler={openTabHandler} openTab={openTab}>
    
   
@@ -312,7 +310,7 @@ function App() {
    
    
     <div className='wrapper'> 
-    
+ 
     <div className='container-right-side'>
       <HeaderTitle/>
       <div className='containerAll'>
@@ -325,33 +323,33 @@ function App() {
         {loader&&<Loader/>}
         
         {loggedUser&&<div className="App col-lg-12">
+       
+      
         
-        <div className='sidebar col-lg-6'>
-        
-          <FriendsList 
-          onChangeImage={setimageBackground} 
-          items = {items}
-          userLoggedDetails={userLoggedDetails}
-          userEmail={userEmail}
-          userPassword={userPassword}
-          onLoader={setLoader}
-          onSetFriends = {setItems}
-          myExpenses={myExpenses}
-          friendExpenses={friendExpenses}
-          bill={bill}
-          onBill={setBill}
-          onMyExpenses={setMyExpenses} 
-          onFriendBill={setFriendExpenses}
-          selectedFriendObject={selectedFriendObject} 
-          onSelectFriend = {SetselectedFriendObject} 
-          onOpentab = {setOpenTab} 
-          openTab={openTab} 
-          onSetSplitTips={SetSplitBill} 
-          splitBill={splitBill}/>
+        <FriendsList 
+        onChangeImage={setimageBackground} 
+        items = {items}
+        userLoggedDetails={userLoggedDetails}
+        userEmail={userEmail}
+        userPassword={userPassword}
+        onLoader={setLoader}
+        onSetFriends = {setItems}
+        myExpenses={myExpenses}
+        friendExpenses={friendExpenses}
+        bill={bill}
+        onBill={setBill}
+        onMyExpenses={setMyExpenses} 
+        onFriendBill={setFriendExpenses}
+        selectedFriendObject={selectedFriendObject} 
+        onSelectFriend = {SetselectedFriendObject} 
+        onOpentab = {setOpenTab} 
+        openTab={openTab} 
+        onSetSplitTips={SetSplitBill} 
+        splitBill={splitBill}/>
 
         
-        </div>
-        <FormSplitBill 
+      
+        {selectedFriendObject.length !== 0 && <FormSplitBill 
         items={items}
         userLoggedDetails={userLoggedDetails}
         userEmail = {userEmail}
@@ -368,7 +366,8 @@ function App() {
         selectedFriendObject = {selectedFriendObject} 
         splitBill={splitBill} 
         onSplitBill={SetSplitBill}/>
-        
+        }
+       
       </div>}
       
     </div>
@@ -457,26 +456,26 @@ function Button({
 
     // local
     axios.post('http://localhost/data_delete_friends.php', {
-      id: selectedFriendObject.id,
-      name: selectedFriendObject.name,
-      balance: selectedFriendObject.balance,
-      image: selectedFriendObject.image
+      id: friendObject.id,
+      name: friendObject.name,
+      balance: friendObject.balance,
+      image: friendObject.image
       
     })
 
     // online
     // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/data_delete_friends.php', {
-    //   id: selectedFriendObject.id,
-    //   name: selectedFriendObject.name,
-    //   balance: selectedFriendObject.balance,
-    //   image: selectedFriendObject.image
+    //   id: friendObject.id,
+    //   name: friendObject.name,
+    //   balance: friendObject.balance,
+    //   image: friendObject.image
       
     // })
 
    
     .then(response => {
         onSetSplitTips(false);
-        onSelectFriend(null); 
+        unSelectFriend(friendObject); 
       console.log('Data sent successfully:', response.data);
       onLoader(false)
       axios.post('http://localhost/loggin.php', {
@@ -574,7 +573,7 @@ function Button({
     onMyExpenses(0);
     onFriendBill(0);
     onBill(0);
-    onSetSplitTips(false);
+
     onSelectFriend(null);
   }
   if(children==="Select") {
@@ -610,7 +609,7 @@ function Button({
 
 }
 
-function AddFriendTab({setOpenTab, openTabHandler, userPassword, userEmail, setItems, openTab, onAddFriendName , name, image, balance, onLoader, userLoggedDetails }) {
+function AddFriendTab({items, setOpenTab, openTabHandler, userPassword, userEmail, setItems, openTab, onAddFriendName , name, image, balance, onLoader, userLoggedDetails }) {
   
   function generateRandomNumber() {
     const min = 100000; // Minimum 6-digit number
@@ -619,54 +618,65 @@ function AddFriendTab({setOpenTab, openTabHandler, userPassword, userEmail, setI
   }
 
   let newFriend = {generateRandomNumber, name, image, balance };
- 
-  
-  function handleAddItems(e) {
-    
-   
-    e.preventDefault();
-   
-    onLoader(true);
 
-    // local
-    axios.post('http://localhost/data_inject_friends.php', {
-      user_id: userLoggedDetails[2],
-      id: newFriend.generateRandomNumber(),
-      name: newFriend.name,
-      balance: newFriend.balance,
-      image: newFriend.image
-    })
-    // online
-    // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/data_inject_friends.php', {
-    //   user_id: userLoggedDetails[2],
-    //   id: newFriend.generateRandomNumber(),
-    //   name: newFriend.name,
-    //   balance: newFriend.balance,
-    //   image: newFriend.image
-      
-    // })
-    .then(response => {
-      
-      console.log('Data sent successfully:', response.data);
-      onLoader(false);
-      
-      // window.location.reload();
-      axios.post('http://localhost/loggin.php', {
-        email: userEmail,
-        password: userPassword,
-      }).then(response => {
-      // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/loggin.php', {
-      //   email: userEmail,
-      //   password: userPassword,
-      // }).then(response => {
+
+
+  function handleAddItems(e) {
+    e.preventDefault();
+
+    let found = false;
+    items.forEach(obj => {
+
+      if (obj.name === newFriend.name) {
+        found = true;
+      }
+    });
+
+    if (found) {
+      alert("At least one object has the value 'Adrian'.");
+    } 
+    else {
+      onLoader(true);
+
+      // local
+      axios.post('http://localhost/data_inject_friends.php', {
+        user_id: userLoggedDetails[2],
+        id: newFriend.generateRandomNumber(),
+        name: newFriend.name,
+        balance: newFriend.balance,
+        image: newFriend.image
+      })
+      // online
+      // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/data_inject_friends.php', {
+      //   user_id: userLoggedDetails[2],
+      //   id: newFriend.generateRandomNumber(),
+      //   name: newFriend.name,
+      //   balance: newFriend.balance,
+      //   image: newFriend.image
+        
+      // })
+      .then(response => {
         
         console.log('Data sent successfully:', response.data);
-        if(response.data[1] ==="true") {
-          console.log(response.data[4])
-          // onLoggedUserDetails([response.data[2],response.data[3], response.data[4]])
-          // onLoggin(true)
-          onLoader(false)
-        }
+        onLoader(false);
+        
+        // window.location.reload();
+        axios.post('http://localhost/loggin.php', {
+          email: userEmail,
+          password: userPassword,
+        }).then(response => {
+        // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/loggin.php', {
+        //   email: userEmail,
+        //   password: userPassword,
+        // }).then(response => {
+          
+          console.log('Data sent successfully:', response.data);
+          if(response.data[1] ==="true") {
+            console.log(response.data[4])
+            // onLoggedUserDetails([response.data[2],response.data[3], response.data[4]])
+            // onLoggin(true)
+            onLoader(false)
+          }
        
         
        
@@ -693,19 +703,24 @@ function AddFriendTab({setOpenTab, openTabHandler, userPassword, userEmail, setI
   
 
     
-    .catch(error => {
-      onLoader(false)
-      console.error('Error sending data:', error);
-    });
-   
+      .catch(error => {
+        onLoader(false)
+        console.error('Error sending data:', error);
+      });
+    
 
-    
-        
-        
-    
-    
+      
+          
+          
+      
+      
+    }
+
   }
-
+  
+    
+   
+    
   return openTab&&<><form className='form-add-friend' onSubmit={handleAddItems}>
     <label>🧑‍🤝‍🧑 Friend name</label>
     <input required type='text' onChange={(e)=>onAddFriendName(e.target.value)}/>
@@ -740,8 +755,8 @@ function FriendContainer({
   friendExpenses}) {
 
 
-  
-  return onSelectFriend !=null &&<li style={{backgroundColor: selectedFriendObject && selectedFriendObject.includes(friendObject.id) ? "#c5ebee" : "white"}}>
+ 
+  return items[0].id !== undefined &&<li style={{backgroundColor: selectedFriendObject && selectedFriendObject.includes(friendObject.id) ? "#c5ebee" : "white"}}>
     <div className='friendContainer'>
       <div className='friendContainer-row'>
         <img src={friendObject.image}/>
@@ -778,6 +793,7 @@ function FriendContainer({
 
         {selectedFriendObject.includes(friendObject.id)  ? 
         <Button userEmail={userEmail} 
+        friendObject={friendObject}
         userPassword={userPassword} 
         onSetFriends={onSetFriends} 
         selectedFriendObject={selectedFriendObject } 
@@ -840,7 +856,9 @@ function FormSplitBill({
 
   return (
   
-    splitBill && <><form className='form-split-bill'>
+    <div className='form-split-bill-container'>
+     
+      {splitBill && <form className='form-split-bill'>
      
       {billPersonPaying==="user"?
       <>
@@ -918,8 +936,8 @@ function FormSplitBill({
       </Button>
     
     
-    </form>
-  </>
+    </form> }
+  </div>
     
     
   )
@@ -945,7 +963,8 @@ function FriendsList({
  
   
   
-  return <ul>
+  return   <div className='sidebar col-lg-6'>
+    <ul>
       {items.map((friend)=><FriendContainer 
       items = {items}
       userLoggedDetails={userLoggedDetails}
@@ -967,7 +986,7 @@ function FriendsList({
       
      
     </ul>
-   
+  </div>
    
   }
 
