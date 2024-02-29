@@ -53,7 +53,7 @@ function LoggedOut({onLoggin, userLoggedDetails, onLoggedUserDetails, onChangeIm
     onLoggedUserDetails([]);
     onChangeImage("img/undraw_mobile_pay_re_sjb8.svg")
   }
-  return <div className="logoutContainer col-lg-12 col-md-12"><button id="btn-message" class="button-message">
+  return <div className="logoutContainer "><button id="btn-message" class="button-message">
  
 	<div class="content-avatar">
 		<div class="status-user"></div>
@@ -260,6 +260,8 @@ function App() {
   const [friendExpenses, setFriendExpenses] = useState();
 
   const [selectedFriendObject, SetselectedFriendObject] = useState([]);
+  const [selectedFriendObjectSingleDelete, SetSelectedFriendObjectSingleDelete] = useState(null);
+  const [modalWindow, setmodalWindow] = useState(false);
   const [splitBill, SetSplitBill] = useState(false);
 
   const [friendImage, SetFriendImage] = useState();
@@ -279,7 +281,13 @@ function App() {
  
  
   return (<>
-     {/* <ModalWindow/> */}
+    {selectedFriendObjectSingleDelete&& modalWindow===false&&
+    <ModalWindow setmodalWindow={setmodalWindow}selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}>
+      <img src= {selectedFriendObjectSingleDelete.image}alt="cookies-img"></img> <br></br>
+      Are you sure you want to delete your friend {selectedFriendObjectSingleDelete.name}? <br></br>
+      <Button onLoader={setLoader} >Delete Friend</Button>
+    </ModalWindow>
+    }
     {loggedUser &&<AddFriendContainer setOpenTab={setOpenTab}openTabHandler={openTabHandler} openTab={openTab}>
    
   
@@ -327,6 +335,8 @@ function App() {
       
         
         <FriendsList 
+        setmodalWindow={setmodalWindow}
+        SetSelectedFriendObjectSingleDelete={SetSelectedFriendObjectSingleDelete}
         onChangeImage={setimageBackground} 
         items = {items}
         userLoggedDetails={userLoggedDetails}
@@ -381,14 +391,15 @@ function App() {
 }
 function Loader() {
 
-  return <div className='backgroundLoader'>
-     <div class="custom-loader"></div>
-  </div>
+  return <div class="custom-loader"></div>
+ 
   
  
 }
 
 function Button({
+  setmodalWindow,
+  SetSelectedFriendObjectSingleDelete,
   setOpenTab,
   userLoggedDetails,
   onAddIiemsData,
@@ -447,9 +458,23 @@ function Button({
   
 
   }
+  function PickFriendToDeleteHandler(e) {
+    e.preventDefault();
+    const selectedFriendToDelete={ 
+      id: friendObject.id,
+      name: friendObject.name,
+      balance: friendObject.balance,
+      image: friendObject.image
+    }
+    setmodalWindow(false)
+    SetSelectedFriendObjectSingleDelete(selectedFriendToDelete)
+
+  }
+ 
   
   function deleteFriendHandler(e) {
-
+    
+    
     e.preventDefault();
     
     onLoader(true);
@@ -592,7 +617,12 @@ function Button({
   }
   if(children==="Delete Friend") {
   return <button onClick={deleteFriendHandler} className='button' type='submit'>
- {children}</button> 
+  {children}</button> 
+  
+  }
+  if(children==="Delete") {
+    return <button onClick={PickFriendToDeleteHandler} className='button' type='submit'>
+   {children}</button> 
   }
   if(children==="Close") {
     return <button onClick={()=>setOpenTab(false)} className='button' type='submit'>
@@ -737,6 +767,8 @@ function AddFriendTab({items, setOpenTab, openTabHandler, userPassword, userEmai
 }
 
 function FriendContainer({
+  setmodalWindow,
+  SetSelectedFriendObjectSingleDelete,
   items,
   userLoggedDetails,
   userEmail,
@@ -775,6 +807,7 @@ function FriendContainer({
     <div className='friendContainer'>
       <div className='friendContainer-row'>
         <Button
+
           selectedFriendObject={selectedFriendObject}
           userLoggedDetails={userLoggedDetails}
           onSetFriends={onSetFriends}
@@ -793,11 +826,13 @@ function FriendContainer({
 
         {selectedFriendObject.includes(friendObject.id)  ? 
         <Button userEmail={userEmail} 
+        setmodalWindow={setmodalWindow}
+        SetSelectedFriendObjectSingleDelete={SetSelectedFriendObjectSingleDelete}
         friendObject={friendObject}
         userPassword={userPassword} 
         onSetFriends={onSetFriends} 
         selectedFriendObject={selectedFriendObject } 
-        onSelectFriend={onSelectFriend } onLoader = {onLoader}onSetSplitTips={onSetSplitTips}>Delete Friend
+        onSelectFriend={onSelectFriend } onLoader = {onLoader}onSetSplitTips={onSetSplitTips}>Delete
         </Button> : null }
     
 
@@ -944,7 +979,8 @@ function FormSplitBill({
 }
 
 function FriendsList({
- 
+  setmodalWindow={setmodalWindow},
+  SetSelectedFriendObjectSingleDelete,
   items, 
   userLoggedDetails,
   userEmail,
@@ -966,6 +1002,8 @@ function FriendsList({
   return   <div className='sidebar col-lg-6'>
     <ul>
       {items.map((friend)=><FriendContainer 
+      setmodalWindow={setmodalWindow}
+      SetSelectedFriendObjectSingleDelete={SetSelectedFriendObjectSingleDelete}
       items = {items}
       userLoggedDetails={userLoggedDetails}
       userEmail={userEmail}

@@ -2,13 +2,16 @@ import './modalWindow.css';
 import React from 'react';
 
 
-function ModalWindow(){
+function ModalWindow({children, setmodalWindow}){
+  function ModalWindowHandler() {
+    setmodalWindow(true)
+  }
     return <div class="container-modal">
     <div class="cookiesContent" id="cookiesPopup">
-      <button class="close">✖</button>
-      <img src="https://cdn-icons-png.flaticon.com/512/1047/1047711.png" alt="cookies-img" />
-      <p>We use cookies for improving user experience, analytics and marketing.</p>
-      <button class="accept">That's fine!</button>
+      <button onClick={ModalWindowHandler}class="close">✖</button>
+     
+      <p>{children}</p>
+      
     </div>
   </div>
 }

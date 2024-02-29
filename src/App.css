@@ -201,12 +201,7 @@ form h2 {
   letter-spacing: -0.5px;
   margin-bottom: 1.6rem;
 }
-.backgroundLoader {
-  position: fixed;
-  width: 100%;
-  height: 100%;
- 
-}
+
 .custom-loader {
   
   z-index: 999;
@@ -545,7 +540,7 @@ form h2 {
   width: 40vw;
 }
 .logoutContainer {
-  justify-content: flex-end;
+  right: 0;
   position: fixed;
   display: flex;
   flex-direction: row;
@@ -874,7 +869,7 @@ form h2 {
   
   display: flex;
   flex-direction: column;
-  z-index: 999999;
+  z-index: 99;
   width:auto;
   position: fixed;
   left: 0;
