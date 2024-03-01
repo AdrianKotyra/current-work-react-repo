@@ -1,16 +1,22 @@
 import './modalWindow.css';
-import React from 'react';
+import React, { useState } from 'react';
 
 
-function ModalWindow({children, setmodalWindow}){
+function ModalWindow({setmodalWindowSearch, message, children, setmodalWindow, selectedFriendObjectSingleDelete}){
+ 
+  
   function ModalWindowHandler() {
     setmodalWindow(true)
+    setmodalWindowSearch(false)
   }
     return <div class="container-modal">
+
     <div class="cookiesContent" id="cookiesPopup">
+      
       <button onClick={ModalWindowHandler}class="close">✖</button>
-     
-      <p>{children}</p>
+      <p>{message}</p>
+      {children}
+      
       
     </div>
   </div>

@@ -1,0 +1,136 @@
+#checkbox {
+display: none;
+}
+
+.toggle {
+z-index: 9999999;
+position: relative;
+width: 40px;
+cursor: pointer;
+margin: auto;
+display: block;
+height: calc(4px * 3 + 11px * 2);
+}
+
+.bar {
+position: absolute;
+left: 0;
+right: 0;
+height: 4px;
+border-radius: calc(4px / 2);
+background: #2bcaff;
+color: inherit;
+opacity: 1;
+transition: none 0.35s cubic-bezier(.5,-0.35,.35,1.5) 0s;
+}
+.mobile-nav-background-container {
+    transform: translatey(-50px);
+    background-color: rgba(0, 0, 0, 0.497);
+    width: 100vw;
+    height: 200vh;
+}
+/***** Tornado Animation *****/
+
+.bar--top {
+bottom: calc(50% + 11px + 4px/ 2);
+transition-property: bottom,transform;
+transition-delay: calc(0s + 0.35s) * .6;
+}
+
+.bar--middle {
+top: calc(50% - 4px/ 2);
+transition-property: opacity,transform;
+transition-delay: calc(0s + 0.35s * .3);
+}
+
+.bar--bottom {
+top: calc(50% + 11px + 4px/ 2);
+transition-property: top,transform;
+transition-delay: 0s;
+}
+
+#checkbox:checked + .toggle .bar--top {
+transform: rotate(-135deg);
+transition-delay: 0s;
+bottom: calc(50% - 4px/ 2);
+}
+
+#checkbox:checked + .toggle .bar--middle {
+opacity: 0;
+transform: rotate(-135deg);
+transition-delay: calc(0s + 0.35s * .3);
+}
+
+#checkbox:checked + .toggle .bar--bottom {
+top: calc(50% - 4px/ 2);
+transform: rotate(-225deg);
+transition-delay: calc(0s + 0.35s * .6);
+}
+
+.mobile-navigation-container {
+    position: fixed;
+    z-index: 9999;
+    width: 100vw;
+    
+    display: none;
+  
+}
+#menuToggle {
+    top: 10px;
+    right: 10px;
+    position: absolute;
+}
+.drop-down-mobile-nav {
+    padding-top: 50px;
+    background-color: white;
+ 
+
+}.link-mobile:hover {
+    background-color: #d7e9ef;
+}
+.link-mobile-container{
+    padding-top: 50px;
+}
+.link-mobile {
+    cursor: pointer;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    color: #2bcaff;
+    font-weight: 600;
+    font-size: 2rem;
+    text-align: center;
+    padding: 30px 0;
+}
+.link-mobile svg{
+    filter: invert(20%) sepia(97%) saturate(459%) hue-rotate(149deg) brightness(94%) contrast(97%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+@media only screen and (max-width: 500px) {
+    .mobile-navigation-container {
+        display: block;
+    }
+    .logoutContainer  {
+        display: none;
+    }
+    .button-friend {
+        display: none;
+    }
+
+}
+
+@keyframes slideDownMobileNav {
+ 0%{
+    transform: translateY(-100%);
+ }
+ 100%{
+    transform: translateY(0%);
+ }
+}

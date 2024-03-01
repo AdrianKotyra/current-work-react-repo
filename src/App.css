@@ -9,6 +9,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
 
 html {
@@ -25,11 +26,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-x: hidden;
 }
 #root {
   width: 100%;
   height: 100%;
   
+}
+.drop-down-mobile-nav {
+  animation: slideDownMobileNav 0.5s forwards;
 }
 .App {
  
@@ -797,40 +802,7 @@ form h2 {
   background: var(--bg-color);
   color: var(--main-color);
 }
-@media only screen and (max-width: 1000px) {
-  .form-split-bill-container {
-    width: 332px;
-  }
-  .wrapper {
-    height: 100%;
-    flex-direction: column;
-  }
-  .containerAll {
-    width: 100%;
-    height: 100%;
-  }
-  .img_footer_container_logged{
-    width: 100%;
-    height: 100%;
-  }
-  .img_footer_container {
-    width: 100%;
-    height: 100%;
-  }
-  .img_footer {
-    padding-top: 10vh;
-   
-    left: 10vw;
-    height: 70vw;
-    top: 10vh;
-    width: 50vw;
-  }
-}
-.form-split-bill-container {
- 
- 
 
-}
 
 .form-split-bill {
   width: 350px;
@@ -877,7 +849,7 @@ form h2 {
 }
 
 .button-friend {
-
+  box-shadow: 0 0 2.17382px rgba(0,0,0,.049), 0 1.75px 6.01034px rgba(0,0,0,.07), 0 3.63px 14.4706px rgba(0,0,0,.091), 0 22px 48px rgba(0,0,0,.14);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -976,3 +948,67 @@ form h2 {
    
   }
 }
+@media only screen and (max-width: 1000px) {
+ 
+  .form-split-bill-container {
+    width: 100%;
+  }
+  .wrapper {
+    height: 100%;
+    flex-direction: column;
+  }
+  .container-right-side {
+    width: 100%;
+  }
+  .form-split-bill {
+    position: initial;
+  }
+  .containerAll{
+    height: 100%;
+  }
+  .img_footer_container_logged{
+    width: 100%;
+    height: 100%;
+    position:initial;
+  }
+  .img_footer_container {
+    width: 100%;
+    height: 100%;
+  }
+  .img_footer {
+    padding-top: 10vh;
+   
+    left: 10vw;
+    height: 70vw;
+    top: 10vh;
+    width: 50vw;
+  }
+ 
+}
+@media only screen and (max-width: 700px) {
+  .App {
+    flex-direction: column;
+  }
+ 
+  .form-split-bill {
+    width: 100%;
+  }
+  .friendContainer {
+    justify-content: center;
+  }
+  .container-right-side {
+    width: 100%;
+  }
+  .sidebar{
+    width: 100%;
+  }
+
+  .containerAll {
+    width: 100%;
+    display: block;
+    
+  }
+
+
+}
+

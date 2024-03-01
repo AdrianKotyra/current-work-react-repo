@@ -4,6 +4,8 @@ import './App.css';
 import axios from 'axios';
 import $ from 'jquery';
 import ModalWindow from "./components/modalWindow/modalWindow";
+import MobileNavigation from "./components/mobileNavigation/mobileNavigation";
+import Button from "./components/Button/Button"
 
 
 function AddFriendContainer({children, openTabHandler, openTab}){
@@ -207,7 +209,7 @@ function LogginForm({onChangeImage, onSetRegForm, onLoggin, onAddIiemsData,  onL
     })
     .catch(error => {
       onLoader(false)
-      console.error('Error sending data:', error);
+      // console.error('Error sending data:', error);
       $(".Message-form-signin").html("Wrong Credentials<br> Try Again");
     });
    
@@ -245,6 +247,8 @@ function LogginForm({onChangeImage, onSetRegForm, onLoggin, onAddIiemsData,  onL
 
 
 function App() {
+  const [showMobileDrop, setShowMobileDrop] = useState(false);
+
   const [imageBackground, setimageBackground] = useState("img/undraw_mobile_pay_re_sjb8.svg")
   const [regForm, setregForm] = useState(false);
   const [userEmail, setUserEmail] = useState();
@@ -262,6 +266,7 @@ function App() {
   const [selectedFriendObject, SetselectedFriendObject] = useState([]);
   const [selectedFriendObjectSingleDelete, SetSelectedFriendObjectSingleDelete] = useState(null);
   const [modalWindow, setmodalWindow] = useState(false);
+  const [modalWindowSearch, setmodalWindowSearch] = useState(false);
   const [splitBill, SetSplitBill] = useState(false);
 
   const [friendImage, SetFriendImage] = useState();
@@ -270,7 +275,8 @@ function App() {
   const [items, setItems] = useState();
 
   const [openTab, setOpenTab] = useState(false);
- 
+  const [message, setMessage] = useState(null);
+
   function handleAddItems(item) {
     setItems((items)=> [...items, item])
   }
@@ -281,36 +287,93 @@ function App() {
  
  
   return (<>
+    {loggedUser && <MobileNavigation  setMessage={setMessage}
+        setmodalWindowSearch={setmodalWindowSearch}
+        setOpenTab={setOpenTab}
+        openTab={openTab}
+        openTabHandler={openTabHandler}
+        userEmail={ userEmail}
+        userPassword= {userPassword}
+
+        setItems={setItems}
+        userLoggedDetails = {userLoggedDetails}
+        onLoader={setLoader}
+        
+        onAddfriendImage={SetFriendImage} 
+        onAddFriendName={SetFriendName} 
+        name={friendName} 
+        onAddFriend={handleAddItems} 
+        image={friendImage} 
+        balance={friendBalance} 
+        items={items}
+        setShowMobileDrop={setShowMobileDrop} 
+        showMobileDrop={showMobileDrop}>
+     
+
+
+
+  </MobileNavigation>}
     {selectedFriendObjectSingleDelete&& modalWindow===false&&
-    <ModalWindow setmodalWindow={setmodalWindow}selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}>
-      <img src= {selectedFriendObjectSingleDelete.image}alt="cookies-img"></img> <br></br>
-      Are you sure you want to delete your friend {selectedFriendObjectSingleDelete.name}? <br></br>
-      <Button onLoader={setLoader} >Delete Friend</Button>
+    <ModalWindow setmodalWindowSearch={setmodalWindowSearch}
+    message={message}setmodalWindow={setmodalWindow}
+    selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}>
+      <>
+      
+        <Button 
+          setMessage={setMessage}
+          setmodalWindow={setmodalWindow}
+          onSetFriends={setItems}
+          userEmail={userEmail}
+          userPassword={userPassword}
+          onSelectFriend = {SetselectedFriendObject} 
+          onSetSplitTips={SetSplitBill}
+          selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete} 
+          onLoader={setLoader} >Delete Friend
+        </Button>
+      </>
     </ModalWindow>
+    }
+
+    {modalWindowSearch===true&&
+    <ModalWindow 
+    
+    
+    setmodalWindowSearch={setmodalWindowSearch} message={message}setmodalWindow={setmodalWindow}selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}>
+    
+    </ModalWindow >
     }
     {loggedUser &&<AddFriendContainer setOpenTab={setOpenTab}openTabHandler={openTabHandler} openTab={openTab}>
    
   
+   
+  
      
-      <AddFriendTab 
-      setOpenTab={setOpenTab}
-      openTab={openTab}
-      openTabHandler={openTabHandler}
-      userEmail={ userEmail}
-      userPassword= {userPassword}
+   <AddFriendTab 
+     setMessage={setMessage}
+     setmodalWindowSearch={setmodalWindowSearch}
+     setOpenTab={setOpenTab}
+     openTab={openTab}
+     openTabHandler={openTabHandler}
+     userEmail={ userEmail}
+     userPassword= {userPassword}
 
-      setItems={setItems}
-      userLoggedDetails = {userLoggedDetails}
-      onLoader={setLoader}
+     setItems={setItems}
+     userLoggedDetails = {userLoggedDetails}
+     onLoader={setLoader}
      
-      onAddfriendImage={SetFriendImage} 
-      onAddFriendName={SetFriendName} 
-      name={friendName} 
-      onAddFriend={handleAddItems} 
-      image={friendImage} 
-      balance={friendBalance} 
-      items={items}
-      />
+     onAddfriendImage={SetFriendImage} 
+     onAddFriendName={SetFriendName} 
+     name={friendName} 
+     onAddFriend={handleAddItems} 
+     image={friendImage} 
+     balance={friendBalance} 
+     items={items}
+   />
+   
+
+
+     
+     
     
     </AddFriendContainer>}
     {loggedUser && <LoggedOut onChangeImage={setimageBackground} userLoggedDetails={userLoggedDetails} onLoggin = {setloggedUser} onLoggedUserDetails={setuserLoggedDetails}/>}
@@ -320,7 +383,7 @@ function App() {
     <div className='wrapper'> 
  
     <div className='container-right-side'>
-      <HeaderTitle/>
+      {loggedUser &&<HeaderTitle/>}
       <div className='containerAll'>
       
       
@@ -335,6 +398,8 @@ function App() {
       
         
         <FriendsList 
+        setMessage={setMessage}
+        selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}
         setmodalWindow={setmodalWindow}
         SetSelectedFriendObjectSingleDelete={SetSelectedFriendObjectSingleDelete}
         onChangeImage={setimageBackground} 
@@ -397,252 +462,11 @@ function Loader() {
  
 }
 
-function Button({
-  setmodalWindow,
-  SetSelectedFriendObjectSingleDelete,
-  setOpenTab,
-  userLoggedDetails,
-  onAddIiemsData,
-  userEmail, 
-  userPassword,
-  onLoader,
-  children, 
-  onSetFriends,
-  onSetSplitTips, 
-  onSelectFriend, 
-  friendObject, 
-  onMyExpenses, 
-  onFriendBill, 
-  onBill, 
-  bill, 
-  friendExpenses, 
-  myExpenses, 
-  selectedFriendObject, 
-  billPersonPaying,
-  onSplitBill
-   }) 
-  {
-  
-  function readBalance(e) {
-    console.log(userLoggedDetails);
-    const myBalance = (bill/2-friendExpenses-myExpenses)
-    e.preventDefault();
-    billPersonPaying==="user"? selectedFriendObject.balance = selectedFriendObject.balance - myBalance  :  
-    selectedFriendObject.balance = selectedFriendObject.balance + myBalance
-    onSplitBill(false)
-    // local
-    axios.post('http://localhost/data_inject_balance.php', {
-      id: selectedFriendObject.id,
-      balance: selectedFriendObject.balance,
-      user_id: userLoggedDetails[2],
-    })
 
-
-    // online
-    // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/data_inject_balance.php', {
-    //   id: selectedFriendObject.id,
-    //   balance: selectedFriendObject.balance,
-    //   user_id: userLoggedDetails[2],
-    // })
-    .then(response => {
-     
-      console.log('Data sent successfully:', response.data);
-      // window.location.reload();
-      
-    })
-    .catch(error => {
-      
-      console.error('Error sending data:', error);
-    });
-   
-  
-
-  }
-  function PickFriendToDeleteHandler(e) {
-    e.preventDefault();
-    const selectedFriendToDelete={ 
-      id: friendObject.id,
-      name: friendObject.name,
-      balance: friendObject.balance,
-      image: friendObject.image
-    }
-    setmodalWindow(false)
-    SetSelectedFriendObjectSingleDelete(selectedFriendToDelete)
-
-  }
- 
-  
-  function deleteFriendHandler(e) {
-    
-    
-    e.preventDefault();
-    
-    onLoader(true);
-
-    // local
-    axios.post('http://localhost/data_delete_friends.php', {
-      id: friendObject.id,
-      name: friendObject.name,
-      balance: friendObject.balance,
-      image: friendObject.image
-      
-    })
-
-    // online
-    // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/data_delete_friends.php', {
-    //   id: friendObject.id,
-    //   name: friendObject.name,
-    //   balance: friendObject.balance,
-    //   image: friendObject.image
-      
-    // })
-
-   
-    .then(response => {
-        onSetSplitTips(false);
-        unSelectFriend(friendObject); 
-      console.log('Data sent successfully:', response.data);
-      onLoader(false)
-      axios.post('http://localhost/loggin.php', {
-        email: userEmail,
-        password: userPassword,
-      
-      }) 
-      // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/loggin.php', {
-      //   email: userEmail,
-      //   password: userPassword,
-      
-      // }) 
-      .then(response => {
-       
-        console.log('Data sent successfully:', response.data);
-        if(response.data[1] ==="true") {
-          console.log(response.data[4])
-          // onLoggedUserDetails([response.data[2],response.data[3], response.data[4]])
-          // onLoggin(true)
-          onLoader(false)
-        }
-          
-        
-        
-        const transformedData = response.data[0].map(item => ({
-          id: item.id,
-          name: item.name,
-          image: `https://i.pravatar.cc/48?u=${item.id}`, // Assuming 'id' is unique and can be used for generating the image URL
-          balance: parseInt(item.balance) || 0, // Default balance to 0 if it's not provided
-        }));
-        onSetFriends(transformedData)
-  
-      })
-      .catch(error => {
-        console.error('Error sending data:', error);
-      });
-      
-
-      // window.location.reload();
-    })
-    .catch(error => {
-      onLoader(false)
-      console.error('Error sending data:', error);
-    });
-
-   
-  
-   
-    
-  }
-  
-  function onSelectFriendHandler(friendSelected) {
-  onSelectFriend((selectedFriendObject) => {
-      // Check if friendSelected.id already exists in the array
-      if (!selectedFriendObject.some(id => id === friendSelected.id)) {
-          // If it doesn't exist, add it
-          return [...selectedFriendObject, friendSelected.id];
-      } else {
-          // If it already exists, return the array unchanged
-          return selectedFriendObject;
-      }
-  });
-  }
-
-
-  function splitBillHandlerOpen() {
-    onMyExpenses(0);
-    onFriendBill(0);
-    onBill(0);
-    onSetSplitTips(true);
-    // onSelectFriend(friendObject);
-    onSelectFriendHandler(friendObject)
-    
-  }
-
-  function UnselectFriendHandler() {
-    unSelectFriend(friendObject)
-   
-    onBill(0)
-  
-  }
-
-  function unSelectFriend(friendSelected) {
-    onSelectFriend((selectedFriendObject) => {
-        // Check if friendSelected.id already exists in the array
-        const updatedSelectedFriendObject = selectedFriendObject.filter(id => id !== friendSelected.id);
-        return updatedSelectedFriendObject;
-    });
-}
-
-  
-
-  function splitBillHandlerClose() {
-
-    onMyExpenses(0);
-    onFriendBill(0);
-    onBill(0);
-
-    onSelectFriend(null);
-  }
-  if(children==="Select") {
-    return <button onClick={splitBillHandlerOpen} className='button' type='submit'>
-    {children}
-   </button> 
-  }
-  if(children==="Apply") {
-    return <button onClick={readBalance} className='button' type='submit'>
-    {children} 
-   </button> 
-  }
-  if(children==="UnSelect") {
-  return <button onClick={UnselectFriendHandler} className='button' type='submit'>
-  {children}</button>
-  }
-  if(children==="Delete Friend") {
-  return <button onClick={deleteFriendHandler} className='button' type='submit'>
-  {children}</button> 
-  
-  }
-  if(children==="Delete") {
-    return <button onClick={PickFriendToDeleteHandler} className='button' type='submit'>
-   {children}</button> 
-  }
-  if(children==="Close") {
-    return <button onClick={()=>setOpenTab(false)} className='button' type='submit'>
-   {children}</button> 
-    }
-
-
-  else {
-    return  <button className='button' type='submit'>
-    {children}
-   </button>
-  }
- 
-
-}
-
-function AddFriendTab({items, setOpenTab, openTabHandler, userPassword, userEmail, setItems, openTab, onAddFriendName , name, image, balance, onLoader, userLoggedDetails }) {
+function AddFriendTab({setMessage, setmodalWindowSearch, items, setOpenTab, openTabHandler, userPassword, userEmail, setItems, openTab, onAddFriendName , name, image, balance, onLoader, userLoggedDetails }) {
   
   function generateRandomNumber() {
-    const min = 100000; // Minimum 6-digit number
+    const min = 100000; // Minimum 6,-digit number
     const max = 999999; // Maximum 6-digit number
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -663,7 +487,9 @@ function AddFriendTab({items, setOpenTab, openTabHandler, userPassword, userEmai
     });
 
     if (found) {
-      alert("At least one object has the value 'Adrian'.");
+      setmodalWindowSearch(true)
+      setMessage("Person with this name already exists")
+      
     } 
     else {
       onLoader(true);
@@ -686,7 +512,7 @@ function AddFriendTab({items, setOpenTab, openTabHandler, userPassword, userEmai
         
       // })
       .then(response => {
-        
+        setOpenTab(false)
         console.log('Data sent successfully:', response.data);
         onLoader(false);
         
@@ -767,6 +593,8 @@ function AddFriendTab({items, setOpenTab, openTabHandler, userPassword, userEmai
 }
 
 function FriendContainer({
+  setMessage,
+  selectedFriendObjectSingleDelete,
   setmodalWindow,
   SetSelectedFriendObjectSingleDelete,
   items,
@@ -825,7 +653,10 @@ function FriendContainer({
         </Button>
 
         {selectedFriendObject.includes(friendObject.id)  ? 
-        <Button userEmail={userEmail} 
+        <Button 
+        setMessage={setMessage}
+        selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}
+        userEmail={userEmail} 
         setmodalWindow={setmodalWindow}
         SetSelectedFriendObjectSingleDelete={SetSelectedFriendObjectSingleDelete}
         friendObject={friendObject}
@@ -979,6 +810,8 @@ function FormSplitBill({
 }
 
 function FriendsList({
+  setMessage={setMessage},
+  selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete},
   setmodalWindow={setmodalWindow},
   SetSelectedFriendObjectSingleDelete,
   items, 
@@ -1002,6 +835,8 @@ function FriendsList({
   return   <div className='sidebar col-lg-6'>
     <ul>
       {items.map((friend)=><FriendContainer 
+      setMessage={setMessage}
+      selectedFriendObjectSingleDelete={selectedFriendObjectSingleDelete}
       setmodalWindow={setmodalWindow}
       SetSelectedFriendObjectSingleDelete={SetSelectedFriendObjectSingleDelete}
       items = {items}
