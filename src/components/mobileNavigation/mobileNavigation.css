@@ -5,11 +5,11 @@ display: none;
 .toggle {
 z-index: 9999999;
 position: relative;
-width: 40px;
+width: 30px;
 cursor: pointer;
 margin: auto;
 display: block;
-height: calc(4px * 3 + 11px * 2);
+height: 30px
 }
 
 .bar {
@@ -66,18 +66,21 @@ top: calc(50% - 4px/ 2);
 transform: rotate(-225deg);
 transition-delay: calc(0s + 0.35s * .6);
 }
-
+.mobile-add-friend {
+    display: flex;
+    flex-direction: column;
+}
 .mobile-navigation-container {
     position: fixed;
-    z-index: 9999;
+    z-index: 999;
     width: 100vw;
     
     display: none;
   
 }
 #menuToggle {
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     position: absolute;
 }
 .drop-down-mobile-nav {

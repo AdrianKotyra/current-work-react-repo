@@ -1,3 +1,4 @@
+
 :root {
   --color-lightest: #e3f2f7;
   --color-light: #c5ebee;
@@ -27,6 +28,12 @@ body {
   align-items: center;
   justify-content: center;
   overflow-x: hidden;
+}
+.friendselectedNames {
+  animation: fadeInNames 1s forwards;
+  color: #10acdf;
+  font-weight: 600;
+  display: inline;
 }
 #root {
   width: 100%;
@@ -141,11 +148,16 @@ body {
 }
 
 .green {
+  
   color: #66a80f;
 }
 
 .red {
+  
   color: #e03131;
+}
+.numbers {
+  animation: changeNumber 1s forwards;
 }
 
 form {
@@ -524,6 +536,7 @@ form h2 {
   --btn-transition: all 0.2s ease-out;
 }
 .img_footer_container {
+  
   background-color: #d1e6ec;
   height: 100vh;
   display: flex;
@@ -537,6 +550,7 @@ form h2 {
   flex-direction: column;
 }
 .img_footer {
+  
 
   /* height: 40vh; */
   left: 10vw;
@@ -802,7 +816,9 @@ form h2 {
   background: var(--bg-color);
   color: var(--main-color);
 }
+.red {
 
+}
 
 .form-split-bill {
   width: 350px;
@@ -810,6 +826,7 @@ form h2 {
   grid-template-columns: 1fr 12rem;
   padding: 3.2rem 4rem;
   position: absolute;
+  margin-bottom: 30px;
 }
 #btn-message {
   background-color: #88c3dc;
@@ -890,6 +907,17 @@ form h2 {
   animation: slope 0.8s linear infinite;
 }
 
+@keyframes fadeInNames{
+  0%{
+    
+    opacity: 0%;
+   
+  }
+  100%{
+    opacity: 100%;
+    
+  }
+}
 @keyframes slope {
   0% {
   }
@@ -923,7 +951,21 @@ form h2 {
    
   }
 }
+@keyframes changeNumber{
+  0%{
 
+    font-weight: normal;
+    font-size: initial
+  }
+  50%{
+    font-weight: 800;
+    font-size: 2rem;
+  }
+  100%{
+    font-weight: normal;
+    font-size: initial
+  }
+}
 
 
 @keyframes topAddFriendContainerMoveY{

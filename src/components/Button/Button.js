@@ -1,10 +1,15 @@
 
 import axios from 'axios';
-
+import $ from 'jquery';
 export default function  Button({
+    setmodalWindow,
+    setItems,
+    items,
+    selectedFriendObject,
+    newValueFriendBill,
     setMessage,
     selectedFriendObjectSingleDelete,
-    setmodalWindow,
+    setmodalWindowSearch,
     SetSelectedFriendObjectSingleDelete,
     setOpenTab,
     userLoggedDetails,
@@ -23,25 +28,163 @@ export default function  Button({
     bill, 
     friendExpenses, 
     myExpenses, 
-    selectedFriendObject, 
     billPersonPaying,
     onSplitBill
      }) 
     {
     
     function readBalance(e) {
-      console.log(userLoggedDetails);
-      const myBalance = (bill/2-friendExpenses-myExpenses)
+      function animateNumber(){
+        $(".red").css("display", "none")
+        $(".green").css("display", "none")
+        setTimeout(() => {
+          $(".red").css("display", "block")
+          $(".green").css("display", "block")
+        }, 1);
+       
+      
+      }
+    
+    
+
+
+      function getIdByName(items, targetName) {
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].name === targetName) {
+                return items[i].id;
+            }
+        }
+        return null; // Return null if no matching item found
+      }
+      let selectedIdFriendPaying = [getIdByName(items, billPersonPaying)]
+     
+
+
+      let setSelectedUserAmounttoPay = 0;
+      if(bill===0) {
+        setmodalWindowSearch(true)
+        setMessage("Your bill cant be empty")
+        setTimeout(() => {
+          setmodalWindowSearch(false)
+        }, 3000);
+      }
+      else {
+
+      
+
+      if(billPersonPaying==="user") {
+       
+
+        setSelectedUserAmounttoPay = (myExpenses - (((bill -  myExpenses) / selectedFriendObject.length) * selectedFriendObject.length)) / selectedFriendObject.length
+        axios.post('http://localhost/data_inject_balance.php', {
+          id: selectedFriendObject,
+          balance: setSelectedUserAmounttoPay,
+          user_id: userLoggedDetails[2],
+
+
+        }).then(response => {
+       
+          console.log('Data sent successfully:', response.data);
+          // window.location.reload();
+          axios.post('http://localhost/loggin.php', {
+            email: userEmail,
+            password: userPassword,
+          }).then(response => {
+            // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/loggin.php', {
+            //   email: userEmail,
+            //   password: userPassword,
+            // }).then(response => {
+              
+            console.log('Data sent successfully:', response.data);
+            if(response.data[1] ==="true") {
+              console.log(response.data[4])
+              // onLoggedUserDetails([response.data[2],response.data[3], response.data[4]])
+              // onLoggin(true)
+              onLoader(false)
+            }
+          
+          
+            const transformedData = response.data[0].map(item => ({
+              id: item.id,
+              name: item.name,
+              image: `https://i.pravatar.cc/48?u=${item.id}`, // Assuming 'id' is unique and can be used for generating the image URL
+              balance: parseInt(item.balance) || 0, // Default balance to 0 if it's not provided
+            }));
+            
+            setItems(transformedData)
+            setmodalWindowSearch(true)
+            setMessage("Your expenses has been updated" )
+            animateNumber()
+       
+          
+          })
+
+
+        }).catch(error => {
+          
+          console.error('Error sending data:', error);
+        })
+          
+      
+      }
+      else {
+        setSelectedUserAmounttoPay = setSelectedUserAmounttoPay*2 -((newValueFriendBill - (((bill -  newValueFriendBill) / selectedFriendObject.length) * selectedFriendObject.length)) / selectedFriendObject.length) 
+        axios.post('http://localhost/data_inject_balance.php', {
+          id: selectedIdFriendPaying,
+          balance: setSelectedUserAmounttoPay,
+          user_id: userLoggedDetails[2],
+        }).then(response => {
+       
+          console.log('Data sent successfully:', response.data);
+          // window.location.reload();
+          axios.post('http://localhost/loggin.php', {
+            email: userEmail,
+            password: userPassword,
+          }).then(response => {
+            // axios.post('https://adriankotyraprojects.co.uk/websites/react_apps/eat-n-split/loggin.php', {
+            //   email: userEmail,
+            //   password: userPassword,
+            // }).then(response => {
+              
+            console.log('Data sent successfully:', response.data);
+            if(response.data[1] ==="true") {
+              console.log(response.data[4])
+              // onLoggedUserDetails([response.data[2],response.data[3], response.data[4]])
+              // onLoggin(true)
+              onLoader(false)
+            }
+          
+          
+            const transformedData = response.data[0].map(item => ({
+              id: item.id,
+              name: item.name,
+              image: `https://i.pravatar.cc/48?u=${item.id}`, // Assuming 'id' is unique and can be used for generating the image URL
+              balance: parseInt(item.balance) || 0, // Default balance to 0 if it's not provided
+            }));
+            
+            setItems(transformedData)
+            setmodalWindowSearch(true)
+            setMessage("Your expenses has been updated" )
+            animateNumber()
+          
+          
+          
+          })
+        })
+        .catch(error => {
+          
+          console.error('Error sending data:', error);
+        });
+      }
+       
+      }
       e.preventDefault();
-      billPersonPaying==="user"? selectedFriendObject.balance = selectedFriendObject.balance - myBalance  :  
-      selectedFriendObject.balance = selectedFriendObject.balance + myBalance
-      onSplitBill(false)
-      // local
-      axios.post('http://localhost/data_inject_balance.php', {
-        id: selectedFriendObject.id,
-        balance: selectedFriendObject.balance,
-        user_id: userLoggedDetails[2],
-      })
+      
+    
+        
+       
+       
+       
   
   
       // online
@@ -50,16 +193,7 @@ export default function  Button({
       //   balance: selectedFriendObject.balance,
       //   user_id: userLoggedDetails[2],
       // })
-      .then(response => {
-       
-        console.log('Data sent successfully:', response.data);
-        // window.location.reload();
-        
-      })
-      .catch(error => {
-        
-        console.error('Error sending data:', error);
-      });
+     
      
     
   
@@ -164,8 +298,17 @@ export default function  Button({
      
       
     }
-    
+    function namesAnimation() {
+      $(".friendselectedNames").css("display", "none")
+      setTimeout(() => {
+        $(".friendselectedNames").css("display", "inline")
+      }, 1);
+  
+
+
+    }
     function onSelectFriendHandler(friendSelected) {
+    namesAnimation()
     onSelectFriend((selectedFriendObject) => {
         // Check if friendSelected.id already exists in the array
         if (!selectedFriendObject.some(id => id === friendSelected.id)) {
